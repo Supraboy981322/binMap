@@ -1,0 +1,3 @@
+["port"] := 4780
+["log level"] := "info"
+["db path"] := "data/db.bgomn"
