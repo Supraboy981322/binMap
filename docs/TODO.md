@@ -18,7 +18,7 @@
   - [ ] Every month on a specific day
   - [ ] Every year on a specific day
   - [ ] When it reaches a certain size
-  - [ ] On command
+  - [x] On command
 - [ ] client
   - [ ] prototype
   - [ ] stable
