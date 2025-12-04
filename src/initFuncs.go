@@ -45,7 +45,7 @@ func configure() error {
 			"must be bool (true or false) with no quotes")
 	}
 
-	//fails silently, to (hopefully) prevent
+	//errs silently, to (hopefully) prevent
 	//  accidentally deleting db
 	//    (which is the only extra permission granted)
 	if foo, ok := config["admin ip"].([]any); ok {
