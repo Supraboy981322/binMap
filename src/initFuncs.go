@@ -52,7 +52,7 @@ func configure() error {
 		for _, adminRaw := range foo {
 			if admin, ok := adminRaw.(string); ok {
 				adminPermIP = append(adminPermIP, admin)
-			} else { log.Fatal("invalid admin") }
+			}
 		}
 	}
 
