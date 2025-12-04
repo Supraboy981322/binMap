@@ -50,7 +50,7 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 
 	var key string
 	if key = getKey(r); key == "" {
-		w.Write([]byte("need key"))
+		w.Write([]byte("need key\n"))
 		return
 	}
 
@@ -75,23 +75,23 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	
 	var key string
 	if key = getKey(r); key == "" {
-		w.Write([]byte("need key"))
+		w.Write([]byte("need key\n"))
 		return
 	}
 	
 	var val string
 	if val = getVal(r); val == "" {
-		w.Write([]byte("need value"))
+		w.Write([]byte("need value\n"))
 		return
 	}
 
 	db[key] = []byte(val)
-	w.Write([]byte("added to db"))
+	w.Write([]byte("added to db\n"))
 
 	
 	if err := gomn.WrBin(db, dbPath); err != nil {
-		eror(w, "failed to save db", err)
-	};w.Write([]byte("saved db"))
+		eror(w, "failed to save db\n", err)
+	};w.Write([]byte("saved db\n"))
 
-	w.Write([]byte("done"))
+	w.Write([]byte("done\n"))
 }
