@@ -45,6 +45,11 @@ func configure() error {
 			"must be bool (true or false) with no quotes")
 	}
 
+	//fails silently, to (hopefully) prevent
+	//  accidentally deleting db
+	//    (which is the only extra permission granted)
+	adminPermIP, _ = config["admin ip"].(string)
+
 	return nil
 }
 

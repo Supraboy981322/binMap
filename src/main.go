@@ -16,6 +16,7 @@ var (
 	dbPath string
 	logLvl string
 	config gomn.Map
+	adminPermIP string
 	bin map[string][]byte
 	configPath = "conf.gomn"
 )
@@ -57,6 +58,7 @@ func main() {
 	http.HandleFunc("/set", setHan)
 	http.HandleFunc("/db", dbHan)
 	http.HandleFunc("/del", delHan)
+	http.HandleFunc("/dbADMIN", dbAdminHan)
 	
 	log.Infof("listening on port %d", port)
 
@@ -200,4 +202,20 @@ func dbHan(w http.ResponseWriter, r *http.Request) {
 	
 	//stream db to client
 	dlBin(w, typ)
+}
+
+func dbAdminHan(w http.ResponseWriter, r *http.Request) {
+	if r.RemoteAddr == adminPermIP && adminPermIP != "" {
+		w.Write("is admin")
+		log.Warn("admin request, not showing ip or action")
+	} else { /* don't even respond */ return }
+
+	//only one header checked for the action
+	action := r.Header.Get("A")
+
+	//is case-sensitive
+	switch action {
+   case "deleteProd()":
+		log.Warn("ADMIN REQUESTED deleteProd()")
+	}
 }

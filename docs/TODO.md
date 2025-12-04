@@ -10,6 +10,15 @@
   - [x] standard gomn (maybe, not sure yet)
   - [x] binary gomn
   - [x] key-value pair form
+- [ ] disable storing db in memory
+- [ ] Auto clearing db
+  - [ ] Every `n` seconds
+  - [ ] Every day at a specific time
+  - [ ] Every Week on a specific day
+  - [ ] Every month on a specific day
+  - [ ] Every year on a specific day
+  - [ ] When it reaches a certain size
+  - [ ] On command
 - [ ] client
   - [ ] prototype
   - [ ] stable
