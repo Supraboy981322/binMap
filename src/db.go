@@ -34,7 +34,11 @@ func updateDB(w http.ResponseWriter) error {
 
 //adds visual complexity, plus looks like spagetty,
 //  so moved out of main.go into db.go as dedicated func
-func dlBin(w http.ResponseWriter, typ string) { 
+func dlBin(w http.ResponseWriter, typ string) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	flusher, canFlush := w.(http.Flusher)
+
 	switch strings.ToLower(typ) {
 	 case "bin", "b", "binary", "raw", "r", "gaas":
 		//open db binary
@@ -65,6 +69,7 @@ func dlBin(w http.ResponseWriter, typ string) {
 		//just stream basic plain-text key-value pair lines
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("%s = % x\n", key, val)))
+			if canFlush { flusher.Flush() }
 		}
 
 	 case "g", "gomn", "std", "standard", "s":
@@ -72,6 +77,7 @@ func dlBin(w http.ResponseWriter, typ string) {
 		//  conversion to standard plain-text gomn
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("[\"%s\"] := \"% x\"\n", key, val)))
+			if canFlush { flusher.Flush() }
 		}
 
    default: //assume invalid type requested

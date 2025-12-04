@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 	"fmt"
+	"time"
 	"slices"
 	"errors"
 	"strconv"
@@ -207,6 +208,10 @@ func dbHan(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbAdminHan(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	flusher, ok := w.(http.Flusher)
+	if !ok { /* send no response */ return }
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		log.Error(err)
@@ -214,6 +219,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if slices.Contains(adminPermIP, ip) && len(adminPermIP) != 0 {
+		flusher.Flush()
 		w.Write([]byte("is admin\n"))
 		log.Warn("validated admin request, omitting ip for security")
 	} else if len(adminPermIP) == 0 {
@@ -228,34 +234,61 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 	switch action {
    case "deleteProd()":
 		log.Warn("ADMIN REQUESTED deleteProd()")
-		w.Write([]byte("WELL THAT'S EXTREME\n"))
-    w.Write([]byte("but who am I to question an admin?\n"))
-		w.Write([]byte("maybe this is some last-stitch effort to save the company from an unfortunate db entry (probably like malware or something illegal)\n"))
-		w.Write([]byte("maybe your boss ordered you to delete prod or get fired while drunk\n"))
-		w.Write([]byte("maybe you're trying to sabatogue (is that how that's spelled?) the company.\n"))
-		w.Write([]byte("mayber you're a state-funded hacker who's been ordered to destry the server\n"))
-		w.Write([]byte("or maybe this was an accident\n"))
-		w.Write([]byte("either way\n"))
-		w.Write([]byte("you have 10 seconds before deleteProd() is run\n"))
-		w.Write([]byte("i hope you didn't take too long to read, that would be humorous, and also highly unfortunate\n"))
-		w.Write([]byte("waiting 10 seconds...\n"))
+		lines := []string{
+			"\033[1mWELL THAT'S EXTREME\033[0m",
+    	"but who am \033[1mI\033[0m to question an \033[1;4;32madmin\033[0m?",
+			"maybe this is some last-stitch effort to save the company from an unfortunate db entry (probably malware or something illegal)",
+			"perhaps your boss (while drunk) ordered you to \033[1;4;5;41mdelete prod\033[0m or get fired",
+			"could be that you're trying to sabatogue (is that how that's spelled?) the company",
+			"it's possible that you're a state-funded hacker who's been ordered to destry the server",
+			"or, this was an \033[4maccident\033[0m",
+			"either way...",
+			"you have \033[1;4;31m10 seconds\033[0m before \033[1;4;5;41mdeleteProd()\033[0m is run",
+			"i hope you didn't take too long to read, that would be humorous, and also highly unfortunate",
+			"waiting \033[1;4;31m10 seconds\033[0m...",
+		}
+		for _, line := range lines {
+			w.Write([]byte(line+"\n"))
+			flusher.Flush()
+			time.Sleep(4 * time.Second)
+		}
 		if r.Header.Get("mkDefault") == "" {
-			w.Write([]byte("wait, nevermind, your request isn't valid\n"))
-			w.Write([]byte("aborting action...\n"))
+			w.Write([]byte("\n"))
+			flusher.Flush()
+			time.Sleep(8 * time.Second)
+			w.Write([]byte("wait, nevermind, your request \033[31misn't valid\033[0m\n"))
+  		flusher.Flush()
+			w.Write([]byte("\033[1;32maborting action...\033[0m\n"))
+		  flusher.Flush()
 			return
 		}
 		mkDefault, err := strconv.ParseBool(r.Header.Get("mkDefault"))
 		if err != nil {
-			w.Write([]byte("wait, nevermind, your request isn't valid\n"))
-			w.Write([]byte("aborting action...\n"))
+			w.Write([]byte("\n"))
+			flusher.Flush()
+			time.Sleep(8 * time.Second)
+			w.Write([]byte("wait, nevermind, your request \033[31misn't valid\033[0m\n"))
+  		flusher.Flush()
+			w.Write([]byte("\033[1;32maborting action...\033[0m\n"))
+  		flusher.Flush()
 			return
 		}
 		//finally...
 		//  do the deed.
 		deleteProd(mkDefault)
-		w.Write([]byte("congrats, you just deleted the database i hope you feel good about yourself.\n"))
-		w.Write([]byte("if you thought this was a joke or an easter-egg, you have severely mistaken, and you should recover from your backups.\n"))
-		w.Write([]byte("wait, you did make backups, right?\n"))
+		lines = []string{
+			"\033[32mcongrats\033[0m",
+			"you just \033[1;31mdeleted\033[0m the database",
+			"i hope you feel good about yourself.",
+			"if you thought this was a joke or an easter-egg...",
+			"you have \033[1;4;31mseverely\033[0m \033[1;31mmistaken\033[0m, and you should recover from your backups.",
+			"wait, you did make backups, \033[1;4mright?\033[0m",
+		}
+		for _, line := range lines {
+			w.Write([]byte(line+"\n"))
+			flusher.Flush()
+			time.Sleep(4 * time.Second)
+		}
 	 default:
 		log.Error("VALIDATED ADMIN ATTEMPTED INVALID ACTION")
 		w.Write([]byte("invalid action\n"))
