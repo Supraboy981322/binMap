@@ -277,6 +277,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 		//  do the deed.
 		deleteProd(mkDefault)
 		lines = []string{
+			"",
 			"\033[32mcongrats\033[0m",
 			"you just \033[1;31mdeleted\033[0m the database",
 			"i hope you feel good about yourself.",
