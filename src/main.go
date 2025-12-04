@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"strconv"
 	"net/http"
 	"github.com/charmbracelet/log"
@@ -35,7 +35,8 @@ func init() {
 
 func main() {
 	log.Info("started")
-	http.HandleFunc("/get", getHandler)
+	http.HandleFunc("/get", getHan)
+	http.HandleFunc("/set", setHan)
 	
 	portStr := ":"+strconv.Itoa(port)
 	log.Infof("listening on port %d", port)
@@ -46,20 +47,22 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 	var ok bool
 
 	log.Infof("[req]:  /get  %s", r.RemoteAddr)
+
 	var key string
-	for _, chk := range []string{"k", "key"} {
-		key = r.Header.Get(chk)
-		if key != "" { break }
-	};if key == "" {
-		w.Write([]byte("need key\n"))
+	if key = getKey(r); key == "" {
+		w.Write([]byte("need key"))
 		return
 	}
 
 	var val []byte
 	if val, ok = db[key].([]byte); !ok {
-		eror := fmt.Sprintf("invalid value in db. key:  %s", key)
-		log.Error(eror)
-		w.Write([]byte(eror))
+		if db[key] == nil {
+			err := errors.New(key)
+			eror(w, "key does not exist", err)
+		}	else {
+			err := errors.New(key)
+			eror(w, "invalid value in db. key", err)
+		}
 		return
 	}
 
@@ -67,3 +70,28 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 	w.Write(val)
 }
 
+func setHan(w http.ResponseWriter, r *http.Request) {
+	log.Info("[req]:  /set  %s", r.RemoteAddr)
+	
+	var key string
+	if key = getKey(r); key == "" {
+		w.Write([]byte("need key"))
+		return
+	}
+	
+	var val string
+	if val = getVal(r); val == "" {
+		w.Write([]byte("need value"))
+		return
+	}
+
+	db[key] = []byte(val)
+	w.Write([]byte("added to db"))
+
+	
+	if err := gomn.WrBin(db, dbPath); err != nil {
+		eror(w, "failed to save db", err)
+	};w.Write([]byte("saved db"))
+
+	w.Write([]byte("done"))
+}
