@@ -29,8 +29,11 @@ func eror(w http.ResponseWriter, str string, err error) {
 	w.Write([]byte(erorr+"\n"))
 }
 
-func logReq(p string, ip string, ext string) {
-	log.Printf("\033[1;36m[req]\033[0m "+
-		"page=\033[1;37m%s\033[0m ; "+
-		"ip=\033[1;37m%s\033[0m ; %s", p, ip, ext)
+//looks like spagetty because of ansi color codes
+func logReq(p string, ip string, extra string) {
+	if canLog, ok := config["log requests"].(bool); ok && canLog {
+		log.Printf("\033[1;36m[req]\033[0m "+
+			"page=\033[1;37m%s\033[0m ; "+
+			"ip=\033[1;37m%s\033[0m ; %s", p, ip, extra)
+	}
 }

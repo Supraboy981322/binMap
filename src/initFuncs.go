@@ -16,7 +16,7 @@ func configure() error {
 
 	//read the config
 	if config, err = gomn.ParseFile(configPath); err != nil {
-		return err
+		return fmt.Errorf("parsing config:  %v", err)
 	} else { log.Debug("parsed config") }
 
 	//set the port
@@ -39,6 +39,11 @@ func configure() error {
 			log.Warn("invalid log level; defaulting to debug")
 		};log.Infof("log level set to %s", log.GetLevel())
 	} else { return errors.New("assert log level") }
+
+	if _, ok := config["log requests"].(bool); !ok {
+		return errors.New("asserting log request, "+
+			"must be bool (true or false) with no quotes")
+	}
 
 	return nil
 }
@@ -63,14 +68,14 @@ func initDB() error {
 			m := defDB()
 			if err = gomn.WrBin(m, dbPath); err != nil {
 				log.Errorf("WrBin:  %v", err)
-				return err
+				return fmt.Errorf("writing default db to binary:  %v", err)
 			} else { log.Debug("created default db") }
 		} else { log.Debug("found db") }
 		
 		//read the db binary from disk
 		if db, err = gomn.ReadBin(dbPath); err != nil {
 			log.Errorf("ReadBin:  %v", err)
-			return err
+			return fmt.Errorf("reading db binary from disk:  %v", err)
 		} else { log.Debug("read database") }
 	} else { //return db path err
 		log.Errorf("Stat(%s)", dbPath)

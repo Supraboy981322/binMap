@@ -12,10 +12,26 @@ import (
 )
 
 func defConfig() []byte {
-	return []byte(`//configuration for binMap
+	return []byte(`//enter your port number here
 ["port"] := 4780
+
+//enter your log level
+//  valid options:
+//    - "debug"
+//    - "info" //recommended
+//    - "warn"
+//    - "error"
+//    - "fatal"
 ["log level"] := "debug"
+["log requests"] := true //valid: true or false (no quotes)
+
+//set the path to your db
+//  can be absolute or relative
 ["db path"] := "data/db.gaab"
+
+//enable compression
+//  true: use compression
+//  false: no compression
 ["compress db"] := false`)
 } 
 

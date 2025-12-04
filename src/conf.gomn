@@ -9,6 +9,7 @@
 //    - "error"
 //    - "fatal"
 ["log level"] := "debug"
+["log requests"] := true //valid: true or false (no quotes)
 
 //set the path to your db
 //  can be absolute or relative
