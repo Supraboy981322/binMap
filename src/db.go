@@ -43,10 +43,15 @@ func dlBin(w http.ResponseWriter, typ string) {
 		if _, err = io.Copy(w, file); err != nil {
 			log.Error("err streaming binary to client")
 		}
-	case "key-value", "t", "text", "k-v", "kv", "key-val", "key value", "key_val":
+   case "key-value", "t", "text", "k-v", "kv", "key-val", "key value", "key_val":
 		for key, val := range db {
-			w.Write([]byte(fmt.Sprintf("%s = %x\n", key, val)))
+			w.Write([]byte(fmt.Sprintf("%s = % x\n", key, val)))
 		}
+	 case "g", "gomn", "std", "standard":
+		for key, val := range db {
+			w.Write([]byte(fmt.Sprintf("[\"%s\"] := \"% x\"\n", key, val)))
+		}
+		
 	default:
 		log.Warnf("attempt to download db as unsupported type:  %s", typ) 
 	}

@@ -15,8 +15,8 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 - [x] creating a key-value pair
 - [ ] database compression support
 - [x] deleting key-value pair
-- [ ] fetching full database
-  - [ ] standard gomn (maybe, not sure yet)
+- [x] fetching full database
+  - [x] standard gomn (maybe, not sure yet)
   - [x] binary gomn
   - [x] key-value pair form
 - [ ] client
