@@ -35,7 +35,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 # Usage
 
 >[!NOTE]
->The Client is not-yet written, so this shows `curl` usage for now
+>The client is not-yet written, so this shows `curl` usage for now
 
 <sub>the client will be much simpler and less of a pain</sub> 
 
