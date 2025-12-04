@@ -32,6 +32,37 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 ---
 
+# Usage (client not-yet written, so this shows `curl` usage for now)
+
+- For pretty much all actions, use you can use the following args
+  - Key (header): 
+    - `-H "k:your key name"`
+    - `-H "key:your key name"`
+  - Value (header):
+    - `-H "v:your value"`
+    - `-H "val:your value"`
+    - `-H "value:your value"`
+- Create a key-value pair (replace `[::1]:4780` with your server address)
+  - Using the header for the value
+    ```sh
+    curl [::1]:4780/set -H "k:foo" -H "v:bar"
+    ```
+  - Using the request body for the value
+    ```sh
+    curl [::1]:4780/set -H "k:foo" -d "bar"
+    ```
+  - Piping from stdin (replace `echo "foo"` with your command)
+    ```sh
+    echo "fizz" | curl [::1]:4780/set -H "k:buzz" --binary-data @-
+    ```
+  - Sending a file (replace `image.png` with your file)
+  ```sh
+  curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
+  ```
+- Get a value (replace `[::1]:4780` with your server address)
+
+---
+
 # Notes
 
 - When piping a file to the server using `curl`, it's best to use `--binary-data` instead of `-d` or `--data`, because `curl` strips certain data from stdin before sending it to the server.
