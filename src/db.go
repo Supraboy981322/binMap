@@ -48,9 +48,9 @@ func dlBin(w http.ResponseWriter, typ string) {
 		}
 	 //this is better than the long, ugly spagetty
 	 //  that it was before
-	 case "pair", "p", "pairs", "kv", "key-value":fallthrough
-   case "key-val", "key_val", "key val":fallthrough
-   case "key value", "t", "text", "k-v":fallthrough
+   case "key-val", "key_val", "key val", "key_value":fallthrough
+	 case "pair", "p", "pairs", "kv", "key-value", "t":fallthrough
+   case "key value", "text", "k-v":fallthrough
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("%s = % x\n", key, val)))
 		}
