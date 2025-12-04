@@ -4,7 +4,7 @@
 >The client is not-yet written, so this shows `curl` usage for now
 >  (The client will be much simpler and less of a pain)
 
-## Actions:
+## Actions
 
 - `set`:
   Create a key-value pair
@@ -17,7 +17,9 @@
 
 ---
 
-## For pretty much all actions, use you can use the following args
+## General args
+
+  For pretty much all actions, use you can use the following args
 
 - Key (header): 
   - `-H "k:your key name"`
