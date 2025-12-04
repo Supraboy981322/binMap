@@ -52,7 +52,9 @@
 
 ---
 
-## Get a value (replace `[::1]:4780` with your server address)
+## Get a value
+ 
+ (replace `[::1]:4780` with your server address)
 
 - Using the header
   ```sh
@@ -71,7 +73,9 @@
   curl [::1]:4780/get -H "k:picture" > image.png
   ```
 
-## Delete a value (replace `[::1]:4780` with your server address)
+## Delete a value
+
+ (replace `[::1]:4780` with your server address)
 
 - Using the header
   ```sh
@@ -82,7 +86,9 @@
   curl [::1]:4780/del -d "foo"
   ```
 
-## Downloading the database (replace `[::1]:4780` with your address)
+## Downloading the database
+
+ (replace `[::1]:4780` with your address)
 
 - The following args arg valid to specify format (replace `[type]`)
   - `-H "t:[type]"`
