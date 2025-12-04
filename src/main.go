@@ -118,6 +118,7 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("added to db\n"))
 
 	updateDB(w)
+
 	w.Write([]byte("done\n"))
 }
 
