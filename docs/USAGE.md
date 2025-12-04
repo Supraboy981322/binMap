@@ -86,7 +86,7 @@
 
  (replace `[::1]:4780` with your address)
 
-- The following args arg valid to specify format (replace `[type]`)
+- The following args are valid to specify format (replace `[type]`)
   - `-H "t:[type]"`
   - `-H "typ:[type"`
   - `-H "type:[type"`
