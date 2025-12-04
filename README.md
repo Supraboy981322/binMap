@@ -3,6 +3,7 @@
 mildly inspired by [Skate](https://github.com/charmbracelet/skate).
 
 Why not just use [Skate](https://github.com/charmbracelet/skate)? This project has a self-hosted server
+
 <sub>(unlike Skate, which decided to just go local-only when sun-setting the cloud service)</sub>
 
 ---
