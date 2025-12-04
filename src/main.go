@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"errors"
 	"strconv"
 	"net/http"
@@ -55,8 +56,15 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 
 	var key string
 	if key = getKey(r); key == "" {
-		w.Write([]byte("need key\n"))
-		return
+		bod, err := io.ReadAll(r.Body)
+		if err != nil {
+			eror(w, "reading req body", err)
+			return
+		};key = string(bod)
+		if key == "" {
+			w.Write([]byte("need key\n"))
+			return
+		}
 	}
 
 	var val []byte
@@ -84,14 +92,23 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	
 	var key string
 	if key = getKey(r); key == "" {
-		w.Write([]byte("need key\n"))
-		return
+		if key == "" {
+			w.Write([]byte("need key\n"))
+			return
+		}
 	}
 	
 	var val string
 	if val = getVal(r); val == "" {
-		w.Write([]byte("need value\n"))
-		return
+		bod, err := io.ReadAll(r.Body)
+		if err != nil {
+			eror(w, "reading req body", err)
+			return
+		};val = string(bod)
+		if val == "" {
+			w.Write([]byte("need value\n"))
+			return
+		}
 	}
 
 	db[key] = []byte(val)
