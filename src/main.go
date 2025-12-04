@@ -237,14 +237,15 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 		lines := []string{
 			"\033[1mWELL THAT'S EXTREME\033[0m",
     	"but who am \033[1mI\033[0m to question an \033[1;4;32madmin\033[0m?",
-			"maybe this is some last-stitch effort to save the company from an unfortunate db entry (probably malware or something illegal)",
+			"maybe this is some last-stitch effort to save the company from a bad db entry",
+			"  (probably malware or something illegal)",
 			"perhaps your boss (while drunk) ordered you to \033[1;4;5;41mdelete prod\033[0m or get fired",
-			"could be that you're trying to sabatogue (is that how that's spelled?) the company",
-			"it's possible that you're a state-funded hacker who's been ordered to destry the server",
+			"could be that you're trying to sabotage the company",
+			"it's possible that you're a hacker who's trying to destroy the server",
 			"or, this was an \033[4maccident\033[0m",
 			"either way...",
 			"you have \033[1;4;31m10 seconds\033[0m before \033[1;4;5;41mdeleteProd()\033[0m is run",
-			"i hope you didn't take too long to read, that would be humorous, and also highly unfortunate",
+			"i hope you didn't take too long to read. that would be humorous, and also highly unfortunate",
 			"waiting \033[1;4;31m10 seconds\033[0m...",
 		}
 		for _, line := range lines {
