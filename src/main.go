@@ -235,7 +235,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
    case "deleteProd()":
 		//log it
 		//  (there should be something between warn and fatal that isn't an err) 
-		log.Warn("ADMIN REQUESTED deleteProd()")
+		log.Warn("ADMIN REQUESTED deleteProd()... stalling")
 
 		//mk list of lines
 		lines := []string{
@@ -249,7 +249,8 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 			"or, this was an \033[4maccident\033[0m",
 			"either way...",
 			"you have \033[1;4;31m10 seconds\033[0m before \033[1;4;5;41mdeleteProd()\033[0m is run",
-			"i hope you didn't take too long to read. that would be humorous, and also highly unfortunate",
+			"i hope you don't take too long to read this.",
+			"that would be humorous, and also highly unfortunate",
 			"waiting \033[1;4;31m10 seconds\033[0m...",
 		}//for each line, print and wait 4 seconds
 		for _, line := range lines {
@@ -265,6 +266,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 		//        after the 10 second warning
 		mkDefault, err := strconv.ParseBool(r.Header.Get("mkDefault"))
 		if r.Header.Get("mkDefault") == "" || err != nil {
+			log.Warn("nevermind, admin request invalid; making them sweat instead")
 			//it proceeds to print
 			//  a blank line, to feel
 			//    like something is happening
@@ -293,6 +295,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 
 		//finally...
 		//  do the deed.
+		log.Warn("running out of time... can't stall for much longer")
 		deleteProd(mkDefault)
 
 		//make them feel bad
