@@ -29,3 +29,9 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
   - [ ] input dir (streamed tarball to server)
   - [ ] flag to extract tarball
   - [ ] flag to compress data (specify compression libs)
+
+---
+
+# Notes
+
+- When piping a file to the server using `curl`, it's best to use `--binary-data` instead of `-d` or `--data`, because `curl` strips certain data from stdin before sending it to the server.
