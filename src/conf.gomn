@@ -1,4 +1,20 @@
+//enter your port number here
 ["port"] := 4780
+
+//enter your log level
+//  valid options:
+//    - "debug"
+//    - "info" //recommended
+//    - "warn"
+//    - "error"
+//    - "fatal"
 ["log level"] := "debug"
+
+//set the path to your db
+//  can be absolute or relative
 ["db path"] := "data/db.gaab"
+
+//enable compression
+//  true: use compression
+//  false: no compression
 ["compress db"] := false
