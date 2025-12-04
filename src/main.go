@@ -41,6 +41,7 @@ func main() {
 	log.Info("started")
 	http.HandleFunc("/get", getHan)
 	http.HandleFunc("/set", setHan)
+	http.HandleFunc("/db", dbHan)
 	
 	portStr := ":"+strconv.Itoa(port)
 	log.Infof("listening on port %d", port)
@@ -104,4 +105,11 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("done\n"))
 }
 
+func dbHan(w http.ResponseWriter, r *http.Request) {
+	typ := chkHeaders(r, []string{"type", "t", "typ"})
+	if typ == "" {
+		typ = "bin"
+	}
 
+	dlBin(w, typ)
+}
