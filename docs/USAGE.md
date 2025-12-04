@@ -93,10 +93,11 @@
   - `-d "[type]"`
 
 - As gaas ([gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
-  - Since `binMap` stores it's data base in gaas by default, the type doesn't need to be specified if it's the format you want:
-    ```sh
-    curl [::1]:4780/db -o db.gaas
-    ```
+
+  Since `binMap` stores it's data base in gaas by default, the type doesn't need to be specified if it's the format you want:
+  ```sh
+  curl [::1]:4780/db -o db.gaas
+  ```
   - Or, if you do want to include the type, the following are valid:
     - `b`
     - `r`
