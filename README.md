@@ -24,3 +24,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
   - [ ] downloading client from server
   - [ ] pipe stdin
   - [ ] changing server conf from client
+  - [ ] file input
+  - [ ] input dir (streamed tarball to server)
+  - [ ] flag to extract tarball
+  - [ ] flag to compress data (specify compression libs)
