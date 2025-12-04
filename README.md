@@ -90,6 +90,45 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/del -d "foo"
     ```
+- Downloading the database (replace `[::1]:4780` with your address)
+  - The following args arg valid to specify format (replace `[type]`)
+    - `-H "t:[type]"`
+    - `-H "typ:[type"`
+    - `-H "type:[type"`
+    - `-d "[type]"`
+  - As gaas ([gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
+    - Since `binMap` stores it's data base in gaas by default, the type doesn't need to be specified if it's the format you want:
+      ```sh
+      curl [::1]:4780/db -o db.gaas
+      ```
+    - Or, if you do want to include the type, the following are valid:
+      - `b`
+      - `bin`
+      - `binary`
+      - `raw`
+      - `r`
+  - As standard gomn
+    ```sh
+    curl [::1]:4780/db -H "t:gomn" -o db.gomn
+    ```
+    - The following types are valid:
+      - `g`
+      - `std`
+      - `gomn`
+      - `standard`
+  - As a basic key-value pair
+    ```sh
+    curl [::1]:4780/db -H "t:k-v" -o db.txt
+    ```
+    - The following types are valid:
+      - `t`
+      - `kv`
+      - `k-v`
+      - `text`
+      - `key_val`
+      - `key-val`
+      - `key value`
+      - `key-value`
 
 ---
 
