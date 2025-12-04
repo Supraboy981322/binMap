@@ -58,8 +58,9 @@ func dlBin(w http.ResponseWriter, typ string) {
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("[\"%s\"] := \"% x\"\n", key, val)))
 		}
-	default:
+   default:
 		log.Warnf("attempt to download db as unsupported type:  %s", typ)
 	}
+
 	return
 }
