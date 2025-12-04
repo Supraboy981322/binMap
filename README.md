@@ -103,16 +103,18 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
       ```
     - Or, if you do want to include the type, the following are valid:
       - `b`
-      - `bin`
-      - `binary`
-      - `raw`
       - `r`
+      - `bin`
+      - `raw`
+      - `gaas`
+      - `binary`
   - As standard gomn
     ```sh
     curl [::1]:4780/db -H "t:gomn" -o db.gomn
     ```
     - The following types are valid:
       - `g`
+      - `s`
       - `std`
       - `gomn`
       - `standard`
@@ -122,9 +124,12 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```
     - The following types are valid:
       - `t`
+      - `p`
       - `kv`
       - `k-v`
       - `text`
+      - `pair`
+      - `pairs`
       - `key_val`
       - `key-val`
       - `key value`
