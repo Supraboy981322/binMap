@@ -23,3 +23,4 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
   - [ ] stable
   - [ ] downloading client from server
   - [ ] pipe stdin
+  - [ ] changing server conf from client
