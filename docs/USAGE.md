@@ -131,5 +131,7 @@
     - `pairs`
     - `key_val`
     - `key-val`
+    - `key val`
     - `key value`
     - `key-value`
+
