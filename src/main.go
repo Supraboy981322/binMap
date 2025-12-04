@@ -31,7 +31,12 @@ func init() {
 
 	//configure the server (clearly)
 	if err = configure(); err != nil {
-		log.Fatalf("failed to configure:  %v", err)
+		if err.Error() == "parsing config:  open conf.gomn: no such file or directory" {
+			log.Error("config does not exist") 
+			defConf()
+		} else {
+			log.Fatalf("failed to configure:  %v", err)
+		}
 	}
 
 	//initialize database (clearly)

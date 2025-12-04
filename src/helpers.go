@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"net/http"
 	"github.com/charmbracelet/log"
@@ -36,4 +37,20 @@ func logReq(p string, ip string, extra string) {
 			"page=\033[1;37m%s\033[0m ; "+
 			"ip=\033[1;37m%s\033[0m ; %s", p, ip, extra)
 	}
+}
+
+func defConf() {
+	log.Warnf("creating default config, "+
+			"\033[1;37mpath=\033[0m\033[1;32m%s\033[0m", configPath)
+
+	//write the file
+	err := os.WriteFile(configPath, defConfig(), 0666) //rw permission
+	if err != nil {
+		log.Fatal("creating default config:  %v", err)
+	}
+
+	//quit with msg to read config
+	log.Fatalf("please review default config "+
+			"(at \033[1;4;5;32m%s\033[0m), "+
+			"and restart the server", configPath)
 }
