@@ -30,7 +30,7 @@ func updateDB(w http.ResponseWriter) error {
 
 func dlBin(w http.ResponseWriter, typ string) {
 	switch strings.ToLower(typ) {
-	 case "bin", "b", "binary", "raw", "r":
+	 case "bin", "b", "binary", "raw", "r", "gaas":
 		file, err := os.Open(dbPath)
 		if err != nil {
 			eror(w, "opening db binary", err)
@@ -43,15 +43,14 @@ func dlBin(w http.ResponseWriter, typ string) {
 		if _, err = io.Copy(w, file); err != nil {
 			log.Error("err streaming binary to client")
 		}
-   case "key-value", "t", "text", "k-v", "kv", "key-val", "key value", "key_val":
+   case "key-value", "t", "text", "k-v", "kv", "key-val", "key value", "key_val", "pair", "p", "pairs":
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("%s = % x\n", key, val)))
 		}
-	 case "g", "gomn", "std", "standard":
+	 case "g", "gomn", "std", "standard", "s":
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("[\"%s\"] := \"% x\"\n", key, val)))
-		}
-		
+		}	
 	default:
 		log.Warnf("attempt to download db as unsupported type:  %s", typ) 
 	}
