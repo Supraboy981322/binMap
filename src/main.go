@@ -112,7 +112,7 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	
-	log.Info("[req]:  /set  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
+	log.Infof("[req]:  /set  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
 
 	db[key] = []byte(val)
 	w.Write([]byte("added to db\n"))
@@ -136,7 +136,7 @@ func delHan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Info("[req]:  /del  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
+	log.Infof("[req]:  /del  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
 
 	delete(db, key)
 	updateDB(w)
@@ -150,7 +150,7 @@ func dbHan(w http.ResponseWriter, r *http.Request) {
 		typ = "bin"
 	}
 
-	log.Info("[req]:  /db ;  addr:  %s  ;  type:  %s", r.RemoteAddr, typ)
+	log.Infof("[req]:  /db ;  addr:  %s  ;  type:  %s", r.RemoteAddr, typ)
 	
 	dlBin(w, typ)
 }
