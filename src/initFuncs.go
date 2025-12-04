@@ -47,7 +47,6 @@ func configure() error {
 
 	//errs silently, to (hopefully) prevent
 	//  accidentally deleting db
-	//    (which is the only extra permission granted)
 	if foo, ok := config["admin ip"].([]any); ok {
 		for _, adminRaw := range foo {
 			if admin, ok := adminRaw.(string); ok {
