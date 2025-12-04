@@ -15,8 +15,6 @@
 - `db`:
   Download the full database
 
----
-
 ## General args
 
   For pretty much all actions, use you can use the following args
@@ -28,8 +26,6 @@
   - `-H "v:your value"`
   - `-H "val:your value"`
   - `-H "value:your value"`
-
----
 
 ## Create a key-value pair
 
@@ -51,8 +47,6 @@
   ```sh
   curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
   ```
-
----
 
 ## Get a value
  
