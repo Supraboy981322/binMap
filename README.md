@@ -32,7 +32,9 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 ---
 
-# Usage (client not-yet written, so this shows `curl` usage for now)
+# Usage
+
+client not-yet written, so this shows `curl` usage for now
 
 - For pretty much all actions, use you can use the following args
   - Key (header): 
