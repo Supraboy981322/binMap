@@ -1,3 +1,3 @@
 ["port"] := 4780
 ["log level"] := "debug"
-["db path"] := "data/db.bgomn"
+["db path"] := "data/db.gaab"
