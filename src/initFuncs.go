@@ -50,7 +50,6 @@ func initDB() error {
 		if _, err = os.Stat(dbPath); errors.Is(err, os.ErrNotExist) {
 			log.Warn("there appears to be no db file; creating one")
 
-//			m := gomn.Map{"version": []byte("who knows")}
 			m := defDB()
 			if err = gomn.WrBin(m, dbPath); err != nil {
 				log.Errorf("WrBin:  %v", err)
