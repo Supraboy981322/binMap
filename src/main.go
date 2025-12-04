@@ -54,8 +54,6 @@ func main() {
 func getHan(w http.ResponseWriter, r *http.Request) {
 	var ok bool
 
-	log.Infof("[req]:  /get  %s", r.RemoteAddr)
-
 	var key string
 	if key = getKey(r); key == "" {
 		bod, err := io.ReadAll(r.Body)
@@ -85,6 +83,8 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 	if newline == "" || newline == "true" {
 		val = append(val, []byte("\n")...)
 	}
+	
+	logReq("/get", r.RemoteAddr, "key="+key)
 
 	w.Write(val)
 }
@@ -112,7 +112,7 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	
-	log.Infof("[req]:  /set  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
+	logReq("/set", r.RemoteAddr, "key="+key)
 
 	db[key] = []byte(val)
 	w.Write([]byte("added to db\n"))
@@ -136,7 +136,7 @@ func delHan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Infof("[req]:  /del  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
+	logReq("/del", r.RemoteAddr, "key="+key)
 
 	delete(db, key)
 	updateDB(w)
@@ -147,10 +147,17 @@ func delHan(w http.ResponseWriter, r *http.Request) {
 func dbHan(w http.ResponseWriter, r *http.Request) {
 	typ := chkHeaders(r, []string{"type", "t", "typ"})
 	if typ == "" {
-		typ = "bin"
+		bod, err := io.ReadAll(r.Body)
+		if err != nil {
+			eror(w, "reading req body", err)
+			return
+		};typ = string(bod)
+		if typ == "" {
+			typ = "bin"
+		}
 	}
 
-	log.Infof("[req]:  /db ;  addr:  %s  ;  type:  %s", r.RemoteAddr, typ)
+	logReq("/db", r.RemoteAddr, "typ="+typ)
 	
 	dlBin(w, typ)
 }

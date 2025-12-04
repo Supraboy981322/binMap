@@ -28,3 +28,9 @@ func eror(w http.ResponseWriter, str string, err error) {
 	log.Error(erorr)
 	w.Write([]byte(erorr+"\n"))
 }
+
+func logReq(p string, ip string, ext string) {
+	log.Printf("\033[1;36m[req]\033[0m "+
+		"page=\033[1;37m%s\033[0m ; "+
+		"ip=\033[1;37m%s\033[0m ; %s", p, ip, ext)
+}

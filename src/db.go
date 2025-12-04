@@ -35,24 +35,31 @@ func dlBin(w http.ResponseWriter, typ string) {
 		if err != nil {
 			eror(w, "opening db binary", err)
 		}; defer file.Close()
+
 		t := time.Now().Format("2006-01-02_15:04:05")
 		sugFileName := fmt.Sprintf("binMap_db_%s.bgomn", t)
+		sugFileVal := fmt.Sprintf("attachment; filename=\"%s\"", sugFileName)
+
 		w.Header().Set("Content-Type", "application/octet-stream")
-		w.Header().Set("Content-Disposition",
-			fmt.Sprintf("attachment; filename=\"%s\"", sugFileName))
+		w.Header().Set("Content-Disposition", sugFileVal)
+
 		if _, err = io.Copy(w, file); err != nil {
-			log.Error("err streaming binary to client")
+			log.Errorf("err streaming binary to client: %v", err)
 		}
-   case "key-value", "t", "text", "k-v", "kv", "key-val", "key value", "key_val", "pair", "p", "pairs":
+	 //this is better than the long, ugly spagetty
+	 //  that it was before
+   case "key-val", "key_val", "key val":fallthrough
+   case "key value", "t", "text", "k-v":fallthrough
+	 case "pair", "p", "pairs", "kv":
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("%s = % x\n", key, val)))
 		}
 	 case "g", "gomn", "std", "standard", "s":
 		for key, val := range db {
 			w.Write([]byte(fmt.Sprintf("[\"%s\"] := \"% x\"\n", key, val)))
-		}	
+		}
 	default:
-		log.Warnf("attempt to download db as unsupported type:  %s", typ) 
+		log.Warnf("attempt to download db as unsupported type:  %s", typ)
 	}
 	return
 }
