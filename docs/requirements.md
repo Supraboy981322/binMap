@@ -1,7 +1,7 @@
 # binMap --> Requirements
  
 ### RAM
-However much space you want for your database plus the baseline for your OS and other services. The full database is read from the gomn-as-a-binary file, then held in memory, meaning if you have a 16GB database, the server is going to fill 16GBs of RAM. There are plans to add an option to disable storing the database in memory (with a warning of degraded performance), but this has not yet been implemented.
+However much space you want for your database plus the baseline for your OS and other services. The full database is read from the gomn-as-a-binary file, then held in memory, meaning if you have a 16GB database, the server is going to fill 16GBs of RAM. There are plans to add an option to disable the in-memory database (with a warning of degraded performance), but this has not yet been implemented.
 
 ### CPU
 Pretty much anything will do fine if you don't have a lot of users.
