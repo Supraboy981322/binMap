@@ -11,7 +11,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 - [x] http server
 - [x] database (using the experimental [gomn](https://github.com/Supraboy981322/gomn) as a binary)
 - [x] fetching value using key
-- [ ] creating a key-value pair
+- [x] creating a key-value pair
 - [ ] fetching full database
   - [ ] standard gomn (maybe, not sure yet)
   - [ ] binary gomn
