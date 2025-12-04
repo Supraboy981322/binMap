@@ -139,18 +139,18 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/db -H "t:k-v" -o db.txt
     ```
-    - The following types are valid:
-      - `t`
-      - `p`
-      - `kv`
-      - `k-v`
-      - `text`
-      - `pair`
-      - `pairs`
-      - `key_val`
-      - `key-val`
-      - `key value`
-      - `key-value`
+  - The following types are valid:
+    - `t`
+    - `p`
+    - `kv`
+    - `k-v`
+    - `text`
+    - `pair`
+    - `pairs`
+    - `key_val`
+    - `key-val`
+    - `key value`
+    - `key-value`
 
 ---
 
