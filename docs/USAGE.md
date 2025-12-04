@@ -88,8 +88,8 @@
 
 - The following args are valid to specify format (replace `[type]`)
   - `-H "t:[type]"`
-  - `-H "typ:[type"`
-  - `-H "type:[type"`
+  - `-H "typ:[type]"`
+  - `-H "type:[type]"`
   - `-d "[type]"`
 
 - As gaas ([gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
