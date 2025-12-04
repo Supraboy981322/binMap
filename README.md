@@ -34,7 +34,10 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 # Usage
 
-client not-yet written, so this shows `curl` usage for now
+>![NOTE]
+>The Client is not-yet written, so this shows `curl` usage for now
+
+<sub>the client will be much simpler and less of a pain</sub> 
 
 - For pretty much all actions, use you can use the following args
   - Key (header): 
