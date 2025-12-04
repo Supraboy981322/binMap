@@ -39,6 +39,16 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 <sub>the client will be much simpler and less of a pain</sub> 
 
+- Actions:
+  - `set`:
+    Create a key-value pair
+  - `get`:
+    Retrieve a value
+  - `del`:
+    Delete a value
+  - `db`:
+    Download the full database
+
 - For pretty much all actions, use you can use the following args
   - Key (header): 
     - `-H "k:your key name"`
