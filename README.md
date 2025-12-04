@@ -47,6 +47,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     - `-H "v:your value"`
     - `-H "val:your value"`
     - `-H "value:your value"`
+
 - Create a key-value pair (replace `[::1]:4780` with your server address)
   - Using the header for the value
     ```sh
@@ -64,6 +65,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
     ```
+
 - Get a value (replace `[::1]:4780` with your server address)
   - Using the header
     ```sh
@@ -81,6 +83,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/get -H "k:picture" > image.png
     ```
+
 - Delete a value (replace `[::1]:4780` with your server address)
   - Using the header
     ```sh
@@ -90,12 +93,14 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/del -d "foo"
     ```
+
 - Downloading the database (replace `[::1]:4780` with your address)
   - The following args arg valid to specify format (replace `[type]`)
     - `-H "t:[type]"`
     - `-H "typ:[type"`
     - `-H "type:[type"`
     - `-d "[type]"`
+
   - As gaas ([gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
     - Since `binMap` stores it's data base in gaas by default, the type doesn't need to be specified if it's the format you want:
       ```sh
@@ -108,6 +113,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
       - `raw`
       - `gaas`
       - `binary`
+
   - As standard gomn
     ```sh
     curl [::1]:4780/db -H "t:gomn" -o db.gomn
@@ -118,6 +124,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
       - `std`
       - `gomn`
       - `standard`
+
   - As a basic key-value pair
     ```sh
     curl [::1]:4780/db -H "t:k-v" -o db.txt
