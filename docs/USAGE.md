@@ -69,7 +69,7 @@
   curl [::1]:4780/get -H "k:picture" > image.png
   ```
 
-## Delete a value
+## Delete a pair
 
  (replace `[::1]:4780` with your server address)
 
