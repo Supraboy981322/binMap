@@ -51,15 +51,31 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
     ```sh
     curl [::1]:4780/set -H "k:foo" -d "bar"
     ```
-  - Piping from stdin (replace `echo "foo"` with your command)
+  - Piping from stdin (replace `tar -cf - *` with your command)
     ```sh
-    echo "fizz" | curl [::1]:4780/set -H "k:buzz" --binary-data @-
+    tar -cf * | curl [::1]:4780/set -H "k:home directory" --binary-data @-
     ```
   - Sending a file (replace `image.png` with your file)
   ```sh
   curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
   ```
 - Get a value (replace `[::1]:4780` with your server address)
+  - Using the header
+  ```sh
+  curl [::1]:4780/get -H "k:foo
+  ```
+  - Using the request body
+  ```sh
+  curl [::1]:4780/get -d "foo"
+  ```
+  - Saving to a file
+  ```sh
+  curl [::1]:4780/get -o home.tar -H "k:home directory"
+  ```
+  - Saving to a file using stdout
+  ```sh
+  curl [::1]:4780/get -H "k:picture" > image.png
+  ```
 
 ---
 
