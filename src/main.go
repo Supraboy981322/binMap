@@ -66,7 +66,11 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	val = append(val, []byte("\n")...)
+	newline := chkHeaders(r, []string{"n", "newline", `\n`, "\n"})
+	if newline == "" || newline == "true" {
+		val = append(val, []byte("\n")...)
+	}
+
 	w.Write(val)
 }
 
@@ -95,3 +99,5 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("done\n"))
 }
+
+
