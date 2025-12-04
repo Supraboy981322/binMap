@@ -1,8 +1,14 @@
 package main
 
+/*
+ * This is so I don't have to package extra files
+ *  and for things that would be better to have in
+ *   memory for speed
+ */
+
 import (
-	"strconv"
-	"github.com/Supraboy981322/gomn"
+	"strconv" //used for default db 
+	"github.com/Supraboy981322/gomn" //used for type
 )
 
 func defConfig() []byte {
