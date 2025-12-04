@@ -1,0 +1,22 @@
+# binMap --> TODO (feature list)
+
+- [x] http server
+- [x] database (using the experimental [gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
+- [x] fetching value using key
+- [x] creating a key-value pair
+- [ ] database compression support
+- [x] deleting key-value pair
+- [x] fetching full database
+  - [x] standard gomn (maybe, not sure yet)
+  - [x] binary gomn
+  - [x] key-value pair form
+- [ ] client
+  - [ ] prototype
+  - [ ] stable
+  - [ ] downloading client from server
+  - [ ] pipe stdin
+  - [ ] changing server conf from client
+  - [ ] file input
+  - [ ] input dir (streamed tarball to server)
+  - [ ] flag to extract tarball
+  - [ ] flag to compress data (specify compression libs)
