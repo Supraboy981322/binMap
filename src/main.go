@@ -28,6 +28,10 @@ func init() {
 		log.Fatalf("failed to configure:  %v", err)
 	}
 
+	if err = initDB(); err != nil {
+		log.Fatalf("failed to initialize database:  %v", err)
+	}
+
 	if err = mapDB(); err != nil {
 		log.Fatalf("failed to map database:  %v", err)
 	}

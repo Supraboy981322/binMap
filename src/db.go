@@ -9,6 +9,7 @@ func mapDB() error {
 	if db, err = gomn.ReadBin(dbPath); err != nil {
 		return err
 	}
+
 	return nil
 }
 

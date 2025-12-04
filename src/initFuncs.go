@@ -31,11 +31,19 @@ func configure() error {
 		 case "fatal": log.SetLevel(log.FatalLevel)
 		 default: log.SetLevel(log.DebugLevel)
 			log.Warn("invalid log level; defaulting to debug")
-		};log.Info("log level set")
+		};log.Infof("log level set to %s", log.GetLevel())
 	} else { return errors.New("assert log level") }
+
+	return nil
+}
+
+func initDB() error {
+	var ok bool
+	var err error
 
 	if dbPath, ok = config["db path"].(string); ok {
 		if err = os.MkdirAll(filepath.Dir(dbPath), 0777); err != nil {
+			log.Errorf("MkdirAll:  %v", err)
 			return err
 		} else { log.Debug("ensured db path exists") }
 
@@ -44,14 +52,19 @@ func configure() error {
 
 			m := gomn.Map{"version": []byte("who knows")}
 			if err = gomn.WrBin(m, dbPath); err != nil {
+				log.Errorf("WrBin:  %v", err)
 				return err
 			} else { log.Debug("created default db") }
 		} else { log.Debug("found db") }
 		
 		if db, err = gomn.ReadBin(dbPath); err != nil {
+			log.Errorf("ReadBin:  %v", err)
 			return err
 		} else { log.Debug("read database") }
-	} else { return errors.New("assert db path") }
+	} else {
+		log.Errorf("Stat(%s)", dbPath)
+		return errors.New("assert db path")
+	}
 
 	return nil
 }
