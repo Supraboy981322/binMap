@@ -58,35 +58,35 @@ client not-yet written, so this shows `curl` usage for now
     tar -cf * | curl [::1]:4780/set -H "k:home directory" --binary-data @-
     ```
   - Sending a file (replace `image.png` with your file)
-  ```sh
-  curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
-  ```
+    ```sh
+    curl [::1]:4780/set -H "k:picture" --data-binary "@image.png"
+    ```
 - Get a value (replace `[::1]:4780` with your server address)
   - Using the header
-  ```sh
-  curl [::1]:4780/get -H "k:foo
-  ```
+    ```sh
+    curl [::1]:4780/get -H "k:foo
+    ```
   - Using the request body
-  ```sh
-  curl [::1]:4780/get -d "foo"
-  ```
+    ```sh
+    curl [::1]:4780/get -d "foo"
+    ```
   - Saving to a file
-  ```sh
-  curl [::1]:4780/get -o home.tar -H "k:home directory"
-  ```
+    ```sh
+    curl [::1]:4780/get -o home.tar -H "k:home directory"
+    ```
   - Saving to a file using stdout
-  ```sh
-  curl [::1]:4780/get -H "k:picture" > image.png
-  ```
+    ```sh
+    curl [::1]:4780/get -H "k:picture" > image.png
+    ```
 - Delete a value (replace `[::1]:4780` with your server address)
   - Using the header
-  ```sh
-  curl [::1]:4780/del -H "k:foo"
-  ```
+    ```sh
+    curl [::1]:4780/del -H "k:foo"
+    ```
   - Using the request body
-  ```sh
-  curl [::1]:4780/del -d "foo"
-  ```
+    ```sh
+    curl [::1]:4780/del -d "foo"
+    ```
 
 ---
 
