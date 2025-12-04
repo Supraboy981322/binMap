@@ -9,9 +9,11 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 # TODO (feature list)
 - [x] http server
-- [x] database (using the experimental [gomn](https://github.com/Supraboy981322/gomn) as a binary)
+- [x] database (using the experimental [gomn](https://github.com/Supraboy981322/gomn)-as-a-binary)
 - [x] fetching value using key
 - [x] creating a key-value pair
+- [ ] database compression support
+- [x] deleting key-value pair
 - [ ] fetching full database
   - [ ] standard gomn (maybe, not sure yet)
   - [x] binary gomn

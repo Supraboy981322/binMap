@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"fmt"
 	"errors"
 	"strconv"
 	"net/http"
@@ -43,6 +44,7 @@ func main() {
 	http.HandleFunc("/get", getHan)
 	http.HandleFunc("/set", setHan)
 	http.HandleFunc("/db", dbHan)
+	http.HandleFunc("/del", delHan)
 	
 	portStr := ":"+strconv.Itoa(port)
 	log.Infof("listening on port %d", port)
@@ -88,7 +90,6 @@ func getHan(w http.ResponseWriter, r *http.Request) {
 }
 
 func setHan(w http.ResponseWriter, r *http.Request) {
-	log.Info("[req]:  /set  %s", r.RemoteAddr)
 	
 	var key string
 	if key = getKey(r); key == "" {
@@ -110,16 +111,36 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	
+	log.Info("[req]:  /set  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
 
 	db[key] = []byte(val)
 	w.Write([]byte("added to db\n"))
 
-	
-	if err := gomn.WrBin(db, dbPath); err != nil {
-		eror(w, "failed to save db\n", err)
-	};w.Write([]byte("saved db\n"))
-
+	updateDB(w)
 	w.Write([]byte("done\n"))
+}
+
+func delHan(w http.ResponseWriter, r *http.Request) {
+	var key string
+	if key = getKey(r); key == "" { 
+		bod, err := io.ReadAll(r.Body)
+		if err != nil {
+			eror(w, "reading req body", err)
+			return
+		};key = string(bod)
+		if key == "" {
+			w.Write([]byte("need key\n"))
+			return
+		}
+	}
+
+	log.Info("[req]:  /del  ;  addr:  %s  ;  key:  %s", r.RemoteAddr, key)
+
+	delete(db, key)
+	updateDB(w)
+	
+	w.Write([]byte(fmt.Sprintf("deleted:  %s\n", key)))
 }
 
 func dbHan(w http.ResponseWriter, r *http.Request) {
@@ -128,5 +149,7 @@ func dbHan(w http.ResponseWriter, r *http.Request) {
 		typ = "bin"
 	}
 
+	log.Info("[req]:  /db ;  addr:  %s  ;  type:  %s", r.RemoteAddr, typ)
+	
 	dlBin(w, typ)
 }

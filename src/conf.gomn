@@ -1,3 +1,4 @@
 ["port"] := 4780
 ["log level"] := "debug"
 ["db path"] := "data/db.gaab"
+["compress db"] := false

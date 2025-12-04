@@ -20,11 +20,11 @@ func mapDB() error {
 	return nil
 }
 
-func updateDB(key string, value []byte) error {
-	db[key] = value
+func updateDB(w http.ResponseWriter) error {
 	if err := gomn.WrBin(db, dbPath); err != nil {
-		return err
-	}
+		eror(w, "failed to save db\n", err)
+	};w.Write([]byte("saved db\n"))
+
 	return nil
 }
 
