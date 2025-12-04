@@ -48,7 +48,13 @@ func configure() error {
 	//fails silently, to (hopefully) prevent
 	//  accidentally deleting db
 	//    (which is the only extra permission granted)
-	adminPermIP, _ = config["admin ip"].(string)
+	if foo, ok := config["admin ip"].([]any); ok {
+		for _, adminRaw := range foo {
+			if admin, ok := adminRaw.(string); ok {
+				adminPermIP = append(adminPermIP, admin)
+			} else { log.Fatal("invalid admin") }
+		}
+	}
 
 	return nil
 }

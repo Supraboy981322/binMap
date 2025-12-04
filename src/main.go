@@ -2,7 +2,9 @@ package main
 
 import (
 	"io"
+	"net"
 	"fmt"
+	"slices"
 	"errors"
 	"strconv"
 	"net/http"
@@ -16,7 +18,7 @@ var (
 	dbPath string
 	logLvl string
 	config gomn.Map
-	adminPermIP string
+	adminPermIP []string
 	bin map[string][]byte
 	configPath = "conf.gomn"
 )
@@ -205,9 +207,18 @@ func dbHan(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbAdminHan(w http.ResponseWriter, r *http.Request) {
-	if r.RemoteAddr == adminPermIP && adminPermIP != "" {
-		w.Write("is admin")
-		log.Warn("admin request, not showing ip or action")
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		log.Error(err)
+		/* send no response */
+		return
+	}
+	if slices.Contains(adminPermIP, ip) && len(adminPermIP) != 0 {
+		w.Write([]byte("is admin\n"))
+		log.Warn("validated admin request, omitting ip for security")
+	} else if len(adminPermIP) == 0 {
+		w.Write([]byte("no admins set; refusing requested action\n"))
+		return
 	} else { /* don't even respond */ return }
 
 	//only one header checked for the action
@@ -217,5 +228,37 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 	switch action {
    case "deleteProd()":
 		log.Warn("ADMIN REQUESTED deleteProd()")
+		w.Write([]byte("WELL THAT'S EXTREME\n"))
+    w.Write([]byte("but who am I to question an admin?\n"))
+		w.Write([]byte("maybe this is some last-stitch effort to save the company from an unfortunate db entry (probably like malware or something illegal)\n"))
+		w.Write([]byte("maybe your boss ordered you to delete prod or get fired while drunk\n"))
+		w.Write([]byte("maybe you're trying to sabatogue (is that how that's spelled?) the company.\n"))
+		w.Write([]byte("mayber you're a state-funded hacker who's been ordered to destry the server\n"))
+		w.Write([]byte("or maybe this was an accident\n"))
+		w.Write([]byte("either way\n"))
+		w.Write([]byte("you have 10 seconds before deleteProd() is run\n"))
+		w.Write([]byte("i hope you didn't take too long to read, that would be humorous, and also highly unfortunate\n"))
+		w.Write([]byte("waiting 10 seconds...\n"))
+		if r.Header.Get("mkDefault") == "" {
+			w.Write([]byte("wait, nevermind, your request isn't valid\n"))
+			w.Write([]byte("aborting action...\n"))
+			return
+		}
+		mkDefault, err := strconv.ParseBool(r.Header.Get("mkDefault"))
+		if err != nil {
+			w.Write([]byte("wait, nevermind, your request isn't valid\n"))
+			w.Write([]byte("aborting action...\n"))
+			return
+		}
+		//finally...
+		//  do the deed.
+		deleteProd(mkDefault)
+		w.Write([]byte("congrats, you just deleted the database i hope you feel good about yourself.\n"))
+		w.Write([]byte("if you thought this was a joke or an easter-egg, you have severely mistaken, and you should recover from your backups.\n"))
+		w.Write([]byte("wait, you did make backups, right?\n"))
+	 default:
+		log.Error("VALIDATED ADMIN ATTEMPTED INVALID ACTION")
+		w.Write([]byte("invalid action\n"))
+		return
 	}
 }

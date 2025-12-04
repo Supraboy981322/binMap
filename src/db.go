@@ -85,6 +85,10 @@ func deleteProd(toDefault bool) error {
 	log.Warn("\033[1;4;5;31mREQUEST TO\033[0m \033[1;4;5;41mDELETE\033[0m \033[1;4;5;31mDATABASE!\033[0m")
 	log.Warn("waiting \033[1;5;31m10 seconds\033[0m before deleting db")
 
+	time.Sleep(10000)
+
+	log.Warn("10 SECONDS ELAPSED, STARTING deleteProd()")
+
 	if toDefault {
 		db = defDB()
 	} else {
