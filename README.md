@@ -76,6 +76,15 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
   ```sh
   curl [::1]:4780/get -H "k:picture" > image.png
   ```
+- Delete a value (replace `[::1]:4780` with your server address)
+  - Using the header
+  ```sh
+  curl [::1]:4780/del -H "k:foo"
+  ```
+  - Using the request body
+  ```sh
+  curl [::1]:4780/del -d "foo"
+  ```
 
 ---
 
