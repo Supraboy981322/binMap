@@ -1,6 +1,9 @@
 package main
 
-import "github.com/Supraboy981322/gomn"
+import (
+	"strconv"
+	"github.com/Supraboy981322/gomn"
+)
 
 func defConfig() []byte {
 	return []byte(`//configuration for binMap
@@ -13,6 +16,7 @@ func defConfig() []byte {
 func defDB() gomn.Map {
 	return gomn.Map{
 		"version": []byte("who knows"),
+		"port": []byte(strconv.Itoa(port)),
 		"foo.c": []byte(`#include <stdio.h>
 
 int main(void) {
