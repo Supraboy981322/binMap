@@ -304,8 +304,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 			"if you thought this was a joke or an easter-egg...",
 			"you have \033[1;4;31mseverely\033[0m \033[1;31mmistaken\033[0m, and you should recover from your backups.",
 			"wait, you did make backups, \033[1;4mright?\033[0m",
-		}
-		//print and wait 4 seconds for each line
+		}//print and wait 4 seconds for each line
 		for _, line := range lines {
 			w.Write([]byte(line+"\n"))
 			flusher.Flush()
