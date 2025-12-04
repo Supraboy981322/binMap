@@ -233,7 +233,11 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 	//is case-sensitive
 	switch action {
    case "deleteProd()":
+		//log it
+		//  (there should be something between warn and fatal that isn't an err) 
 		log.Warn("ADMIN REQUESTED deleteProd()")
+
+		//mk list of lines
 		lines := []string{
 			"\033[1mWELL THAT'S EXTREME\033[0m",
     	"but who am \033[1mI\033[0m to question an \033[1;4;32madmin\033[0m?",
@@ -247,38 +251,53 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 			"you have \033[1;4;31m10 seconds\033[0m before \033[1;4;5;41mdeleteProd()\033[0m is run",
 			"i hope you didn't take too long to read. that would be humorous, and also highly unfortunate",
 			"waiting \033[1;4;31m10 seconds\033[0m...",
-		}
+		}//for each line, print and wait 4 seconds
 		for _, line := range lines {
 			w.Write([]byte(line+"\n"))
 			flusher.Flush()
 			time.Sleep(4 * time.Second)
 		}
-		if r.Header.Get("mkDefault") == "" {
+		
+		//in order to give them a
+		//  mild heart attack, the server
+		//    doesn't check that all params
+		//      are present and valid until
+		//        after the 10 second warning
+		mkDefault, err := strconv.ParseBool(r.Header.Get("mkDefault"))
+		if r.Header.Get("mkDefault") == "" || err != nil {
+			//it proceeds to print
+			//  a blank line, to feel
+			//    like something is happening
 			w.Write([]byte("\n"))
+
+			//then it waits 8 seconds
+			//  to maximize the chances
+			//    of a mild heart-attack
 			flusher.Flush()
 			time.Sleep(8 * time.Second)
+
+			//and lets them know that
+			//  their mild heart-attack
+			//    was for nothing
 			w.Write([]byte("wait, nevermind, your request \033[31misn't valid\033[0m\n"))
   		flusher.Flush()
 			w.Write([]byte("\033[1;32maborting action...\033[0m\n"))
 		  flusher.Flush()
+
+			//only for them to return to 
+			//  to their terminal's cursor,
+			//    so they can contemplate what
+			//      they almost did
 			return
 		}
-		mkDefault, err := strconv.ParseBool(r.Header.Get("mkDefault"))
-		if err != nil {
-			w.Write([]byte("\n"))
-			flusher.Flush()
-			time.Sleep(8 * time.Second)
-			w.Write([]byte("wait, nevermind, your request \033[31misn't valid\033[0m\n"))
-  		flusher.Flush()
-			w.Write([]byte("\033[1;32maborting action...\033[0m\n"))
-  		flusher.Flush()
-			return
-		}
+
 		//finally...
 		//  do the deed.
 		deleteProd(mkDefault)
+
+		//make them feel bad
 		lines = []string{
-			"",
+			"",//start with a blank line 
 			"\033[32mcongrats\033[0m",
 			"you just \033[1;31mdeleted\033[0m the database",
 			"i hope you feel good about yourself.",
@@ -286,6 +305,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 			"you have \033[1;4;31mseverely\033[0m \033[1;31mmistaken\033[0m, and you should recover from your backups.",
 			"wait, you did make backups, \033[1;4mright?\033[0m",
 		}
+		//print and wait 4 seconds for each line
 		for _, line := range lines {
 			w.Write([]byte(line+"\n"))
 			flusher.Flush()
