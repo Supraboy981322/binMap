@@ -10,6 +10,6 @@ Pretty much anything will do fine if you don't have a lot of users
 However much space you want for your db
 
 ### Networking
-However fast would you need to create a entry with the following parameters:
+However fast you would need to create a entry with the following parameters:
   - A key of `EMERGENCY HOME DIR BACKUP`
   - The command `tar -cf - ~` piped into stdin as the value
