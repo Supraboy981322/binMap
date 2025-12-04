@@ -8,7 +8,7 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 ---
 
-# Features/To-do
+# Features
 
 - HTTP server
 - Create pair with arbitrary data as a value
