@@ -10,7 +10,14 @@ Why not just use [Skate](https://github.com/charmbracelet/skate)? This project h
 
 # Features/To-do
 
-See the [features doc](docs/TODO.md)
+- HTTP server
+- Create pair with arbitrary data as a value
+    (text, images, videos, executables, etc.)
+- Downloading the full database 
+- (full) Database is held in memory for speed (see [requirements](docs/requirements.md))
+- Database is written to binary file when changed
+
+See the [features doc](docs/TODO.md) for a full listfeatures
 
 ---
 
