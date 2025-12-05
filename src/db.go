@@ -58,7 +58,6 @@ func updateDB(key string, val []byte) {
 		atSize := int64(clDBAtSize) * 1024 * 1024
 
 		if useDiskDB {
-			db = gomn.Map{}
 			//clear if new size exceeds maximum
 			if dbStats, err := os.Stat(dbPath); err == nil {
 				newDBSize := (dbStats.Size() * 10) + int64(newPairSize)
@@ -190,11 +189,11 @@ func clDB(isRoutine bool) {
 			time.Sleep(100 * time.Millisecond)
 		}
 	
+		db = gomn.Map{}
 		if !blkDB {
-			if useMemDB { db = gomn.Map{} }
-	
 			if useDiskDB {
 				blkDB = true
+
 				if err := gomn.WrBin(gomn.Map{}, dbPath); err != nil {
 					log.Errorf("failed to clear db:  %v", err)
 				};blkDB = false
@@ -203,7 +202,7 @@ func clDB(isRoutine bool) {
 			}
 
 			log.Warn("db cleared")
-		}
+		} else { log.Error("db blocked therefore not cleared") }
 	} else {
 		for true {
 			time.Sleep(time.Duration(clDBSec) * time.Second)
