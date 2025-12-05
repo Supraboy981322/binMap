@@ -12,9 +12,9 @@
   - [x] key-value pair form
 - [x] disable storing db in memory
 - [x] disable storing db on disk
-- [ ] Auto clearing db
+- [x] Auto clearing db
   - [x] Every `n` seconds
-  - [ ] When it reaches a certain size
+  - [x] When it reaches a certain size
   - [x] On command
 - [ ] client
   - [ ] prototype
