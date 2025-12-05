@@ -54,20 +54,24 @@ func updateDB(key string, val []byte) {
 		err := enc.Encode(gomn.Map{key: val})
 		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
 		newPairSize := buff.Len()
-				
+
+		log.Printf("new pair size:  %d", newPairSize)
+
 		atSize := int64(clDBAtSize) * 1024 * 1024
 
 		if useDiskDB {
 			//clear if new size exceeds maximum
 			if dbStats, err := os.Stat(dbPath); err == nil {
-				newDBSize := (dbStats.Size() * 10) + int64(newPairSize)
+				newDBSize := dbStats.Size() + int64(newPairSize)
+				log.Printf("new db size:    %d", newDBSize)
+				log.Printf("clear at size:  %d", atSize)
 				if newDBSize >= atSize {
 					log.Debug("db will be larger than allowed")
 					blkDB = false
 					clDB(false)
 				} else { log.Debug("db will be within size allowance") }
 			} else { log.Errorf("failed to stat db:  %v", err) }
-		} else {	
+		} else {
 			//get size of new pair as gob
 			var buff2 bytes.Buffer
 			enc2 := gob.NewEncoder(&buff2)
@@ -83,10 +87,10 @@ func updateDB(key string, val []byte) {
 	};blkDB = false
 
 	//update in-memory db if enabled
-//	if useMemDB { db[key] = val }
+	if useMemDB { db[key] = val }
 
 	//update disk-db if enabled
-//	if useDiskDB { go updateDBBin(key, val) }
+	if useDiskDB { go updateDBBin(key, val) }
 
 	return
 }
@@ -189,15 +193,18 @@ func clDB(isRoutine bool) {
 			time.Sleep(100 * time.Millisecond)
 		}
 	
-		db = gomn.Map{}
+		db = make(gomn.Map)
 		if !blkDB {
 			if useDiskDB {
-				blkDB = true
+/*				blkDB = true
 
-				if err := gomn.WrBin(gomn.Map{}, dbPath); err != nil {
+				if err := gomn.WrBin(db, dbPath); err != nil {
 					log.Errorf("failed to clear db:  %v", err)
 				};blkDB = false
-
+*/
+				if err := os.Remove(dbPath); err != nil {
+					log.Errorf("removing db bin:  %v", err)
+				}
 				mapDB()
 			}
 
@@ -216,7 +223,7 @@ func clDB(isRoutine bool) {
 	
 			if !blkDB {		
 				if clToDef { db = defDB()
-				} else { db = gomn.Map{} }
+				} else { db = make(gomn.Map) }
 	
 				blkDB = true
 				if err := gomn.WrBin(db, dbPath); err != nil {
