@@ -21,7 +21,6 @@ func mapDB() error {
 	for blkDB {
 		time.Sleep(100 * time.Millisecond)
 	};blkDB = true
-
 	var err error
 	if db, err = gomn.ReadBin(dbPath); err != nil {
 		return err
@@ -56,38 +55,40 @@ func updateDB(key string, val []byte) {
 		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
 		newPairSize := buff.Len()
 				
-		atSize := int64(clDBAtSize) * 1024 * 1024 
+		atSize := int64(clDBAtSize) * 1024 * 1024
 
 		if useDiskDB {
+			db = gomn.Map{}
 			//clear if new size exceeds maximum
 			if dbStats, err := os.Stat(dbPath); err == nil {
 				newDBSize := (dbStats.Size() * 10) + int64(newPairSize)
 				if newDBSize >= atSize {
+					log.Debug("db will be larger than allowed")
 					blkDB = false
 					clDB(false)
-				}
+				} else { log.Debug("db will be within size allowance") }
 			} else { log.Errorf("failed to stat db:  %v", err) }
 		} else {	
 			//get size of new pair as gob
 			var buff2 bytes.Buffer
-			enc := gob.NewEncoder(&buff2)
-			err := enc.Encode(db)
+			enc2 := gob.NewEncoder(&buff2)
+			err := enc2.Encode(db)
 			if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
 			dbMemSize := buff2.Len()
+
 			if int64(dbMemSize + newPairSize) >= atSize {
 				blkDB = false
 				clDB(false)
 			}
 		}
-	}
-	
+	};blkDB = false
+
 	//update in-memory db if enabled
-	if useMemDB { db[key] = val }
+//	if useMemDB { db[key] = val }
 
 	//update disk-db if enabled
-	if useDiskDB { go updateDBBin(key, val) }
+//	if useDiskDB { go updateDBBin(key, val) }
 
-	//update gomn-as-a-binary db
 	return
 }
 
@@ -190,15 +191,16 @@ func clDB(isRoutine bool) {
 		}
 	
 		if !blkDB {
-			if clToDef { db = defDB()
-			} else { db = gomn.Map{} }
+			if useMemDB { db = gomn.Map{} }
 	
-			blkDB = true
-			if err := gomn.WrBin(db, dbPath); err != nil {
-				log.Errorf("failed to clear db:  %v", err)
-			};blkDB = false
+			if useDiskDB {
+				blkDB = true
+				if err := gomn.WrBin(gomn.Map{}, dbPath); err != nil {
+					log.Errorf("failed to clear db:  %v", err)
+				};blkDB = false
 
-			initDB()
+				mapDB()
+			}
 
 			log.Warn("db cleared")
 		}
