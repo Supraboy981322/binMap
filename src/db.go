@@ -69,7 +69,7 @@ func updateDB(key string, val []byte) {
 	if useMemDB { db[key] = val }
 
 	//update disk-db if enabled
-	if useDiskDB { go updateDBBin() }
+	if useDiskDB { go updateDBBin(key, val) }
 
 	//update gomn-as-a-binary db
 	return
