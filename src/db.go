@@ -5,8 +5,10 @@ import (
 	"os"
 	"fmt"
 	"time"
+	"bytes"
 	"strings"
 	"net/http"
+	"encoding/gob"
 	"github.com/charmbracelet/log"
 	"github.com/Supraboy981322/gomn"
 )
@@ -28,23 +30,49 @@ func mapDB() error {
 	return nil
 }
 
-//called several times
-//  so has dedicated func
-func updateDB(w http.ResponseWriter) error {
+func updateDBBin(key string, val []byte) {
 	//shared state and mutex are needlessly
 	//  complex for a simple boolean
 	for blkDB {
 		time.Sleep(100 * time.Millisecond)
 	};blkDB = true
-	
 
-	if !blkDB {
-		if err := gomn.WrBin(db, dbPath); err != nil {
-			eror(w, "failed to save db\n", err)
-		};w.Write([]byte("saved db\n"))
+	//clear db if size check set
+	if clDBAtSize > -1 {
+		//get size of new pair as gob
+		var buff bytes.Buffer
+		enc := gob.NewEncoder(&buff)
+		err := enc.Encode(gomn.Map{key: val})
+		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
+		newPairSize := buff.Len()
+
+		//clear if new size exceeds maximum
+		if dbStats, err := os.Stat(dbPath); err == nil {
+			if fileInfo.Size + newPairSize >= clDBAtSize * 1024 * 1024 {
+				blkDB = false
+				clDB(false)
+			}
+		} else { log.Errorf("failed to stat db:  %v", err) }
+	}
+
+	//write the db
+	blkDB = true
+	if err := gomn.WrBin(db, dbPath); err != nil {
+		log.Fatalf("failed to save db\n", err)
 	};blkDB = false
+}
 
-	return nil
+//called several times
+//  so has dedicated func
+func updateDB(key string, val []byte) {
+	//update in-memory db if enabled
+	if useMemDB { db[key] = val }
+
+	//update disk-db if enabled
+	if useDiskDB { go updateDBBin() }
+
+	//update gomn-as-a-binary db
+	return
 }
 
 //adds visual complexity, plus looks like spagetty,
@@ -138,27 +166,46 @@ func deleteProd(toDefault bool) error {
 	return nil
 }
 
-func clDB() {
-	for true {
-		time.Sleep(time.Duration(clDBSec) * time.Second)
-
-		if blkDB { log.Debug("clDB():  db blocked, waiting until unblocked") }
-
+func clDB(isRoutine bool) {
+	if !isRoutine {
 		//wait for db to be unblocked
 		for blkDB {
 			time.Sleep(100 * time.Millisecond)
 		}
-
-		if !blkDB {		
+	
+		if !blkDB {
 			if clToDef { db = defDB()
 			} else { db = gomn.Map{} }
-
+	
 			blkDB = true
 			if err := gomn.WrBin(db, dbPath); err != nil {
 				log.Errorf("failed to clear db:  %v", err)
 			};blkDB = false
 			
 			log.Warn("db cleared")
+		}
+	} else {
+		for true {
+			time.Sleep(time.Duration(clDBSec) * time.Second)
+	
+			if blkDB { log.Debug("clDB():  db blocked, waiting until unblocked") }
+	
+			//wait for db to be unblocked
+			for blkDB {
+				time.Sleep(100 * time.Millisecond)
+			}
+	
+			if !blkDB {		
+				if clToDef { db = defDB()
+				} else { db = gomn.Map{} }
+	
+				blkDB = true
+				if err := gomn.WrBin(db, dbPath); err != nil {
+					log.Errorf("failed to clear db:  %v", err)
+				};blkDB = false
+				
+				log.Warn("db cleared")
+			}
 		}
 	}
 }

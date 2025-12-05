@@ -21,7 +21,9 @@ var (
 	clToDef bool
 	dbPath string
 	logLvl string
+	useMemDB = true
 	config gomn.Map
+	useDiskDB = true
 	adminPermIP []string
 	bin map[string][]byte
 	configPath = "conf.gomn"
@@ -69,7 +71,7 @@ func main() {
 	log.Infof("listening on port %d", port)
 
 	if clDBSec > 0 {
-		go clDB()
+		go clDB(true)
 	}
 
 	//looks cleaner 
@@ -152,14 +154,11 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	//self-explainitory
 	logReq("/set", r.RemoteAddr, "key="+key)
 
-	//set value in db (in memory)
-	db[key] = []byte(val)
+	//save to db
+	updateDB(key, val) 
 	w.Write([]byte("added to db\n"))
 
-	updateDB(w) //save in-memory db to disk
-
 	//confirm completion
-	//  (updateDB sends progress to client)
 	w.Write([]byte("done\n"))
 }
 
@@ -183,8 +182,11 @@ func delHan(w http.ResponseWriter, r *http.Request) {
 	//self-explainitory
 	logReq("/del", r.RemoteAddr, "key="+key)
 
-	delete(db, key) //delete from in-memory db
-	updateDB(w) //save changes to disk
+	//delete from in-memory db
+	if useMemDB { delete(db, key) }
+
+	//save changes to disk
+	if useDiskDB { updateDBBin("", nil) }
 
 	//confirm completion
 	msg := fmt.Sprintf("deleted:  %s\n", key)
