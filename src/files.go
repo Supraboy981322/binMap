@@ -32,7 +32,12 @@ func defConfig() []byte {
 //enable compression
 //  true: use compression
 //  false: no compression
-["compress db"] := false`)
+["compress db"] := false
+
+//clear db after amount of time (seconds)
+//  must be a valid int, or 0 for never
+["clear db every n seconds"] := 0
+["clear db to default"] := false`)
 } 
 
 func defDB() gomn.Map {
