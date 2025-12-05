@@ -64,7 +64,7 @@ func configure() error {
 	if clToDef, ok = config["clear db to default"].(bool); !ok {
 		log.Fatal("value of \"clear db to default\" is invalid")
 	} else if clToDef { log.Debug("db will be set to default when cleared")
-	} else { log.Debug("db will be erased entirely when cle	ared") }
+	} else { log.Debug("db will be erased entirely when cleared") }
 
 	if useDiskDB, ok = config["use disk db"].(bool); !ok {
 		log.Fatal("value of \"use disk db\" is invalid")
@@ -75,9 +75,16 @@ func configure() error {
 		log.Fatal("value of \"use in-memory db\" is invalid")
 	} else if useMemDB { log.Debug("db will be stored in-memory")
 	} else { log.Debug("db will not be saved in-memory") }
+	
+	if clDBAtSize, ok = config["clear db if size is n MB"].(int); !ok {
+		log.Fatal("value of \"clear db if size is n MB\" is invalid")
+	} else if clDBAtSize > -1 {
+		log.Warnf("db will be cleared when it reaches %d MB", clDBAtSize)
+	} else { log.Debug("db will not be cleared at a specific size") }
 
 	if !useMemDB && !useDiskDB {
-		log.Fatal("well you must store the db *somewhere*; you have both in-memory and disk db disabled") 
+		log.Fatal("well you must store the db *somewhere*; "+
+				"you have both in-memory and disk db disabled") 
 	}
 
 	return nil

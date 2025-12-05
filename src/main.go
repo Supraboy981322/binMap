@@ -21,6 +21,7 @@ var (
 	clToDef bool
 	dbPath string
 	logLvl string
+	clDBAtSize int
 	useMemDB = true
 	config gomn.Map
 	useDiskDB = true
@@ -155,7 +156,7 @@ func setHan(w http.ResponseWriter, r *http.Request) {
 	logReq("/set", r.RemoteAddr, "key="+key)
 
 	//save to db
-	updateDB(key, val) 
+	updateDB(key, []byte(val))
 	w.Write([]byte("added to db\n"))
 
 	//confirm completion

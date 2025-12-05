@@ -48,7 +48,7 @@ func updateDBBin(key string, val []byte) {
 
 		//clear if new size exceeds maximum
 		if dbStats, err := os.Stat(dbPath); err == nil {
-			if fileInfo.Size + newPairSize >= clDBAtSize * 1024 * 1024 {
+			if dbStats.Size() + int64(newPairSize) >= int64(clDBAtSize) * 1024 * 1024 {
 				blkDB = false
 				clDB(false)
 			}
