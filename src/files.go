@@ -23,7 +23,9 @@ func defConfig() []byte {
 //    - "error"
 //    - "fatal"
 ["log level"] := "debug"
-["log requests"] := true //valid: true or false (no quotes)
+
+//valid: true or false (no quotes)
+["log requests"] := true 
 
 //set the path to your db
 //  can be absolute or relative
@@ -34,10 +36,22 @@ func defConfig() []byte {
 //  false: no compression
 ["compress db"] := false
 
-//clear db after amount of time (seconds)
-//  must be a valid int, or 0 for never
-["clear db every n seconds"] := 0
-["clear db to default"] := false`)
+//set to 0 for never
+["clear db every n seconds"] := 0 
+
+//set to -1 for never
+["clear db if size is n MB"] := -1
+
+//when clearing the db,
+//  should it be set to default?
+["clear db to default"] := false
+
+//disable to save RAM
+["use in-memory db"] := true //disable to save RAM
+
+//disable if you want lose 
+//  db when server is stopped
+["use disk db"] := true`)
 } 
 
 func defDB() gomn.Map {
