@@ -37,24 +37,6 @@ func updateDBBin(key string, val []byte) {
 		time.Sleep(100 * time.Millisecond)
 	};blkDB = true
 
-	//clear db if size check set
-	if clDBAtSize > -1 {
-		//get size of new pair as gob
-		var buff bytes.Buffer
-		enc := gob.NewEncoder(&buff)
-		err := enc.Encode(gomn.Map{key: val})
-		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
-		newPairSize := buff.Len()
-
-		//clear if new size exceeds maximum
-		if dbStats, err := os.Stat(dbPath); err == nil {
-			if dbStats.Size() + int64(newPairSize) >= int64(clDBAtSize) * 1024 * 1024 {
-				blkDB = false
-				clDB(false)
-			}
-		} else { log.Errorf("failed to stat db:  %v", err) }
-	}
-
 	//write the db
 	blkDB = true
 	if err := gomn.WrBin(db, dbPath); err != nil {
@@ -65,6 +47,40 @@ func updateDBBin(key string, val []byte) {
 //called several times
 //  so has dedicated func
 func updateDB(key string, val []byte) {
+	//clear db if size check set
+	if clDBAtSize > -1 {
+		//get size of new pair as gob
+		var buff bytes.Buffer
+		enc := gob.NewEncoder(&buff)
+		err := enc.Encode(gomn.Map{key: val})
+		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
+		newPairSize := buff.Len()
+				
+		atSize := int64(clDBAtSize) * 1024 * 1024 
+
+		if useDiskDB {
+			//clear if new size exceeds maximum
+			if dbStats, err := os.Stat(dbPath); err == nil {
+				newDBSize := (dbStats.Size() * 10) + int64(newPairSize)
+				if newDBSize >= atSize {
+					blkDB = false
+					clDB(false)
+				}
+			} else { log.Errorf("failed to stat db:  %v", err) }
+		} else {	
+			//get size of new pair as gob
+			var buff2 bytes.Buffer
+			enc := gob.NewEncoder(&buff2)
+			err := enc.Encode(db)
+			if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
+			dbMemSize := buff2.Len()
+			if int64(dbMemSize + newPairSize) >= atSize {
+				blkDB = false
+				clDB(false)
+			}
+		}
+	}
+	
 	//update in-memory db if enabled
 	if useMemDB { db[key] = val }
 
@@ -181,7 +197,9 @@ func clDB(isRoutine bool) {
 			if err := gomn.WrBin(db, dbPath); err != nil {
 				log.Errorf("failed to clear db:  %v", err)
 			};blkDB = false
-			
+
+			initDB()
+
 			log.Warn("db cleared")
 		}
 	} else {
