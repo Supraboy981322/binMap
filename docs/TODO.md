@@ -10,7 +10,8 @@
   - [x] standard gomn (maybe, not sure yet)
   - [x] binary gomn
   - [x] key-value pair form
-- [ ] disable storing db in memory
+- [x] disable storing db in memory
+- [x] disable storing db on disk
 - [ ] Auto clearing db
   - [x] Every `n` seconds
   - [ ] When it reaches a certain size
