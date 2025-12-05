@@ -55,16 +55,12 @@ func updateDB(key string, val []byte) {
 		if err != nil { log.Errorf("failed to get size of new pair:  %v", err) }
 		newPairSize := buff.Len()
 
-		log.Printf("new pair size:  %d", newPairSize)
-
 		atSize := int64(clDBAtSize) * 1024 * 1024
 
 		if useDiskDB {
 			//clear if new size exceeds maximum
 			if dbStats, err := os.Stat(dbPath); err == nil {
 				newDBSize := dbStats.Size() + int64(newPairSize)
-				log.Printf("new db size:    %d", newDBSize)
-				log.Printf("clear at size:  %d", atSize)
 				if newDBSize >= atSize {
 					log.Debug("db will be larger than allowed")
 					blkDB = false
