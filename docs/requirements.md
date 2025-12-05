@@ -14,14 +14,6 @@ To save on RAM, you can do one of the following:
     ```
     To clear the database once-a-day, every-day
 
-- Clear the database when it reaches a certain size 
-  - Find `["clear db if size is n MB"]` in your `conf.gomn`
-  - Set it to any value greater-than `0` (in seconds). Eg:
-    ```gomn
-    ["clear db if size is n MB"] := 86400
-    ```
-    To clear the database once-a-day, every-day
-
 - Clear the database after an amount of time
   - Find `["clear db every n seconds"]` in your `conf.gomn`
   - Set it to any value greater-than `0` (in seconds). Eg:
