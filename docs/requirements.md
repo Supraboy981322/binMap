@@ -3,7 +3,7 @@
 ### RAM
 However much space you want for your database plus the baseline for your OS and other services.
 
-At start, the full database is read from the gomn-as-a-binary file, then held in memory, meaning if you have a 16GB database, the server is going to fill 16GBs of RAM.
+For performance, at start, the full database is read from the gomn-as-a-binary file, then held in memory, meaning if you have a 16GB database, the server is going to fill 16GBs of RAM.
 
 There are plans to add an option to disable the in-memory database (with a warning of degraded performance), and for clearing it when it reaches a certain size. Since these have not yet been implemented, for now, you can auto-clear the database after an amount of time like so:
 
