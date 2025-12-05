@@ -43,7 +43,7 @@ func configure() error {
 	if _, ok := config["log requests"].(bool); !ok {
 		return errors.New("asserting log request, "+
 			"must be bool (true or false) with no quotes")
-	}
+	} else { log.Debug("validated \"log request\" value") }
 
 	//errs silently, to (hopefully) prevent
 	//  accidentally deleting db
@@ -54,6 +54,18 @@ func configure() error {
 			}
 		}
 	}
+
+	if clDBSec, ok = config["clear db every n seconds"].(int); !ok {
+		log.Fatal("value of \"clear db every n seconds\" is invalid")
+	} else if clDBSec > 0 {
+		log.Warnf("db is set to clear every %d seconds", clDBSec)
+	} else { log.Debug("db will not clear automatically") }
+
+	if clToDef, ok = config["clear db to default"].(bool); !ok {
+		log.Fatal("value of \"clear db to default\" is invalid")
+	} else if clToDef { log.Debug("db will be set to default when cleared")
+	} else { log.Debug("db will be erased entirely when cleared") }
+
 
 	return nil
 }
@@ -75,18 +87,19 @@ func initDB() error {
 			log.Warn("there appears to be no db file; creating one")
 
 			//if no db, mk default db 
-			m := defDB()
+			m := defDB();blkDB = true
 			if err = gomn.WrBin(m, dbPath); err != nil {
 				log.Errorf("WrBin:  %v", err)
 				return fmt.Errorf("writing default db to binary:  %v", err)
-			} else { log.Debug("created default db") }
+			} else { log.Debug("created default db") };blkDB = false
 		} else { log.Debug("found db") }
 		
 		//read the db binary from disk
+		blkDB = true
 		if db, err = gomn.ReadBin(dbPath); err != nil {
 			log.Errorf("ReadBin:  %v", err)
 			return fmt.Errorf("reading db binary from disk:  %v", err)
-		} else { log.Debug("read database") }
+		} else { log.Debug("read database") };blkDB = false
 	} else { //return db path err
 		log.Errorf("Stat(%s)", dbPath)
 		return errors.New("assert db path from config")

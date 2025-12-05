@@ -14,8 +14,11 @@ import (
 )
 
 var (
+	blkDB bool
 	db gomn.Map
 	port = 8944
+	clDBSec int
+	clToDef bool
 	dbPath string
 	logLvl string
 	config gomn.Map
@@ -64,6 +67,10 @@ func main() {
 	http.HandleFunc("/dbADMIN", dbAdminHan)
 	
 	log.Infof("listening on port %d", port)
+
+	if clDBSec > 0 {
+		go clDB()
+	}
 
 	//looks cleaner 
 	portStr := ":"+strconv.Itoa(port)
@@ -286,7 +293,7 @@ func dbAdminHan(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("\033[1;32maborting action...\033[0m\n"))
 		  flusher.Flush()
 
-			//only for them to return to 
+			//only for them to return 
 			//  to their terminal's cursor,
 			//    so they can contemplate what
 			//      they almost did

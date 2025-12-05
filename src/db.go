@@ -14,10 +14,16 @@ import (
 //might make more complex later
 //  so has dedicated func
 func mapDB() error {
+	//shared state and mutex are needlessly
+	//  complex for a simple boolean 
+	for blkDB {
+		time.Sleep(100 * time.Millisecond)
+	};blkDB = true
+
 	var err error
 	if db, err = gomn.ReadBin(dbPath); err != nil {
 		return err
-	}
+	};blkDB = false
 
 	return nil
 }
@@ -25,9 +31,18 @@ func mapDB() error {
 //called several times
 //  so has dedicated func
 func updateDB(w http.ResponseWriter) error {
-	if err := gomn.WrBin(db, dbPath); err != nil {
-		eror(w, "failed to save db\n", err)
-	};w.Write([]byte("saved db\n"))
+	//shared state and mutex are needlessly
+	//  complex for a simple boolean
+	for blkDB {
+		time.Sleep(100 * time.Millisecond)
+	};blkDB = true
+	
+
+	if !blkDB {
+		if err := gomn.WrBin(db, dbPath); err != nil {
+			eror(w, "failed to save db\n", err)
+		};w.Write([]byte("saved db\n"))
+	};blkDB = false
 
 	return nil
 }
@@ -41,6 +56,10 @@ func dlBin(w http.ResponseWriter, typ string) {
 
 	switch strings.ToLower(typ) {
 	 case "bin", "b", "binary", "raw", "r", "gaas":
+		//don't wait for it to be unlocked
+		//  just set to locked and stream it
+		blkDB = true
+
 		//open db binary
 		file, err := os.Open(dbPath)
 		if err != nil {
@@ -59,7 +78,7 @@ func dlBin(w http.ResponseWriter, typ string) {
 		// stream the binary
 		if _, err = io.Copy(w, file); err != nil {
 			log.Errorf("err streaming binary to client: %v", err)
-		}
+		};blkDB = false
 
 	 //this is better than the long, ugly spagetty
 	 //  that it was before
@@ -101,11 +120,45 @@ func deleteProd(toDefault bool) error {
 		db = gomn.Map{}
 	}
 
-	if err := gomn.WrBin(db, dbPath); err != nil {
-		log.Fatal("failed to DELETE db\n", err)
+	//shared state and mutex are needlessly
+	//  complex for a simple boolean 
+	for blkDB {
+		time.Sleep(100 * time.Millisecond)
 	}
+
+	if !blkDB {
+		blkDB = true
+		if err := gomn.WrBin(db, dbPath); err != nil {
+			log.Fatal("failed to DELETE db\n", err)
+		};blkDB = false
+	} 
 
 	log.Warn("\033[1;4;5;31mDATABASE DELETED\033[0m")
 
 	return nil
+}
+
+func clDB() {
+	for true {
+		time.Sleep(time.Duration(clDBSec) * time.Second)
+
+		if blkDB { log.Debug("clDB():  db blocked, waiting until unblocked") }
+
+		//wait for db to be unblocked
+		for blkDB {
+			time.Sleep(100 * time.Millisecond)
+		}
+
+		if !blkDB {		
+			if clToDef { db = defDB()
+			} else { db = gomn.Map{} }
+
+			blkDB = true
+			if err := gomn.WrBin(db, dbPath); err != nil {
+				log.Errorf("failed to clear db:  %v", err)
+			};blkDB = false
+			
+			log.Warn("db cleared")
+		}
+	}
 }
