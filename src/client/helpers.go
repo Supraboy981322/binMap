@@ -35,6 +35,7 @@ func parseArgs() {
 							err := errors.New("input arg requires a value")
 							eror("no value provided", err)
 						}
+					 case 'B': binary = true
 					 case 'v':
 						if ok := chkAhead(args, i); ok {
 							val = []byte(args[i+1])

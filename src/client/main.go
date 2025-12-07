@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 	"bytes"
+	"bufio"
 	"errors"
 	"net/http"
 	"io/ioutil"
@@ -16,6 +17,7 @@ var (
 	act string
 	val []byte
 	key string
+	binary bool
 	timeout int
 	addr string
 	input string
@@ -76,6 +78,8 @@ func mkReq() {
 		if input != "" {
 			payload, err = os.Open(input)
 			if err != nil { eror("failed to read file", err) }
+		} else if useStdin {
+			payload = bufio.NewReader(os.Stdin)
 		} else if val != nil {
 			payload = bytes.NewReader(val)
 		} else { eror("FATAL: UNCAUGHT ERR", errors.New("value")) }
@@ -94,10 +98,15 @@ func mkReq() {
 		eror("failed to send request", err)
 	};defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		eror("failed to read response body", err)
-	};defer resp.Body.Close()
+	if binary {
+		_, err := io.Copy(os.Stdout, resp.Body)
+		if err != nil { eror("can't stream to stdout", err) }
+	} else {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			eror("failed to read response body", err)
+		};defer resp.Body.Close()
 
-	print(string(body))
+		print(string(body))
+	}
 }
