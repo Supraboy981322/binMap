@@ -52,6 +52,14 @@ func parseArgs() {
 							err := errors.New("server arg requires a value")
 							eror("no value provided", err)
 						}
+					 case 'o':
+						if ok := chkAhead(args, i); ok {
+						  output = args[i+1]
+							taken = append(taken, i+1)
+						} else {
+							err := errors.New("output arg requires a value")
+							eror("no value provided", err)
+						}
 					 case 's':
 						if act == "" { act = "set"
 						} else {
@@ -111,11 +119,11 @@ func mkDefConf() {
 ["server address"] := "http://[::1]:4780"
 ["verbose"] := false`)
 
-	if err := os.MkdirAll(filepath.Dir(confPath), 0644); err != nil {
+	if err := os.MkdirAll(filepath.Dir(confPath), 0755); err != nil {
 		eror("failed to make config path", err)
 	}
 	
-	if err := os.WriteFile(confPath, file, 0644); err != nil {
+	if err := os.WriteFile(confPath, file, 0755); err != nil {
 		eror("failed to write default config", err)
 	}
 }
@@ -135,7 +143,14 @@ func parseConfig() {
 	} else { verbLog("got home dir") }
 
 	confPath = filepath.Join(homeDir,
-			".config/Supraboy981322/config.gomn")
+			".config/Supraboy981322/binMap/config.gomn")
+
+	if _, err := os.Stat(confPath); errors.Is(err, os.ErrNotExist) {
+		verbLog("config doesn't exist")
+		mkDefConf()
+		verbLog("created default config")
+	} else if err != nil { eror("checking config path", err)
+	} else { verbLog("config exists") }
 
 	if conf, err = gomn.ParseFile(confPath); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -176,6 +191,11 @@ func parseConfig() {
 			err := errors.New("only accepts one value")
 			eror("too many values", err)
 		} else if chk { hasIn = true }
+	}
+
+	if output != "" && act != "get" {
+		err := errors.New("output arg only valid for \"get\" action ('-g')")
+		eror("invalid arg", err)
 	}
 }
 

@@ -22,6 +22,7 @@ var (
 	addr string
 	input string
 	verbose bool
+	output string
 	useStdin bool
 	conf gomn.Map
 	confPath string
@@ -98,7 +99,14 @@ func mkReq() {
 		eror("failed to send request", err)
 	};defer resp.Body.Close()
 
-	if binary {
+	if act == "get" && output != "" {
+		fileBuff, err := os.Create(output)
+		if err != nil { eror("failed to open output file", err) }
+		defer fileBuff.Close()
+
+		_, err = io.Copy(fileBuff, resp.Body)
+		if err != nil { eror("can't stream to file", err) }
+	} else if binary {
 		_, err := io.Copy(os.Stdout, resp.Body)
 		if err != nil { eror("can't stream to stdout", err) }
 	} else {
