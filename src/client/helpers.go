@@ -60,6 +60,7 @@ func parseArgs() {
 							err := errors.New("output arg requires a value")
 							eror("no value provided", err)
 						}
+					 case 'h': help()
 					 case 's':
 						if act == "" { act = "set"
 						} else {
@@ -101,6 +102,27 @@ func parseArgs() {
 				 case "val", "value":
 					if ok := chkAhead(args, i); ok {
 						val = []byte(args[i+1])
+						taken = append(taken, i+1)
+					} else {
+						err := errors.New("value arg requires a value")
+						eror("no value provided", err)
+					}
+				 case "set": act = "set"
+				 case "get": act = "get"
+				 case "delete": act = "del"
+				 case "binary", "bin": binary = true
+				 case "help": help()
+				 case "input":
+					if ok := chkAhead(args, i); ok {
+						input = args[i+1]
+						taken = append(taken, i+1)
+					} else {
+						err := errors.New("value arg requires a value")
+						eror("no value provided", err)
+					}
+				 case "output":
+					if ok := chkAhead(args, i); ok {
+						output = args[i+1]
 						taken = append(taken, i+1)
 					} else {
 						err := errors.New("value arg requires a value")
@@ -206,4 +228,34 @@ func validateURL(og string) (string, bool) {
 	if u.Scheme == "" { u.Scheme = "https" }
 
 	return u.String(), true
+}
+
+func help() {
+	lines := []string{
+		"binMap --> help",
+		"  -h",
+		"    help (returns this and exits)",
+		"  -V",
+		"    verbose",
+		"  -S",
+		"    server address",
+		"  -o",
+		"    output (file)",
+		"  -i",
+		"    input (file)",
+		"  -B",
+		"    stream binary to stdout",
+		"  -v",
+		"    value",
+		"  -s",
+		"    set",
+		"  -g",
+		"    get",
+		"  -D",
+		"    delete",
+	}
+	for _, li := range lines {
+		fmt.Println(li)
+	}
+	os.Exit(0)
 }
